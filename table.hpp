@@ -26,15 +26,17 @@ namespace Moon
 				Table() = default;
 				void Open(const std::string& path)
 				{
+					NewTable();
 					std::string s = File::ReadAllText(path);
 
-					auto lines = String::ViewLines(s);					
+					if (s.empty())
+						return;
 
-					NewTable();
+					auto lines = String::ViewLines(s);
 
 					for (const auto& line : lines)
 					{
-						unsigned char left = BitConverter::FromHexString(line.data());
+						unsigned char left = BitConverter::FromHexChar((const unsigned char*)line.data());
 
 						if (left != line[3])
 						{
@@ -57,12 +59,12 @@ namespace Moon
 						str[i] = m_Table[str[i]];
 					}
 				}
-				_prefix void Output(std::string& str) const
+				_prefix void Output(unsigned char* str, size_t lenght) const
 				{
 					if (!m_Change)
 						return;
 
-					for (size_t i = 0; i < str.size(); ++i)
+					for (size_t i = 0; i < lenght; ++i)
 					{
 						size_t pos = m_Table.find(str[i]);
 
@@ -71,6 +73,10 @@ namespace Moon
 							str[i] = pos;
 						}
 					}
+				}
+				_prefix void Output(std::string& str) const
+				{
+					Output((unsigned char*)str.data(), str.size());
 				}
 				inline char& operator[](const unsigned char& pos)
 				{
