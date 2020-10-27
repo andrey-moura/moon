@@ -109,7 +109,7 @@ namespace Moon
 			return output;
 		}
 
-		inline void Remove(std::string& str, const std::string& find)
+		static void Remove(std::string& str, const std::string& find)
 		{
 			size_t pos = str.find(find);
 
@@ -120,7 +120,7 @@ namespace Moon
 			}
 		}		
 		
-		inline void ReplaceDiferentSize(std::string& str, const std::string& find, const std::string replace)
+		static void ReplaceDiferentSize(std::string& str, const std::string& find, const std::string replace)
 		{
 			int diference = replace.size() - find.size();			
 			size_t index = str.find(find);
@@ -147,7 +147,7 @@ namespace Moon
 			}
 		}
 		
-		inline void ReplaceSameSize(std::string& str, const std::string& find, const std::string& replace)
+		static void ReplaceSameSize(std::string& str, const std::string& find, const std::string& replace)
 		{
 			if (find == replace) return;
 
@@ -160,7 +160,7 @@ namespace Moon
 			}
 		}
 		
-		inline void Replace(std::string& str, const std::string& find, const std::string& replace)
+		static void Replace(std::string& str, const std::string& find, const std::string& replace)
 		{
 			if (str.empty()) return;
 			if (find.empty()) return;
@@ -230,7 +230,7 @@ namespace Moon
 			}
 		}
 
-		__forceinline bool CheckEndLineCRLF(const std::string_view& str)
+		static bool CheckEndLineCRLF(const std::string_view& str)
 		{
 			if (str.empty())
 				return true;
@@ -254,7 +254,7 @@ namespace Moon
 			return true;
 		}
 
-		__forceinline bool CheckEndLineLF(const std::string_view& str)
+		static bool CheckEndLineLF(const std::string_view& str)
 		{
 			return std::string::npos != str.find("\r");
 		}

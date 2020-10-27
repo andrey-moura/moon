@@ -8,7 +8,7 @@ namespace Moon
 		static std::string s_False = "False";
 		static std::string s_True = "True";
 
-		__forceinline unsigned char FromHexNibble(const unsigned char& value)
+		static unsigned char FromHexNibble(const unsigned char& value)
 		{
 			if (value >= 0x30 && value <= 0x46)
 			{
@@ -24,7 +24,7 @@ namespace Moon
 
 			return 0x00;
 		}		
-		__forceinline std::string ToHexString(const unsigned int& value)
+		static std::string ToHexString(const unsigned int& value)
 		{
 			std::string text(8, '0');			
 
@@ -35,18 +35,18 @@ namespace Moon
 
 			return text;
 		}
-		__forceinline std::string ToHexChar(const unsigned char& c)
+		static std::string ToHexChar(const unsigned char& c)
 		{
 			std::string hex(2, '0');
 			hex[0] = s_Nibbles[(c & 0xF0) >> 4];
 			hex[1] = s_Nibbles[c & 0x0F];
 			return hex;
 		}
-		__forceinline unsigned char FromHexChar(const unsigned char* str)
+		static unsigned char FromHexChar(const unsigned char* str)
 		{		
 			return FromHexNibble(str[0]) << 4 | FromHexNibble(str[1]);
 		}		
-		__forceinline unsigned char ReverseBits(const unsigned char& c)
+		static unsigned char ReverseBits(const unsigned char& c)
 		{
 			uint8_t output = c;
 
@@ -56,24 +56,22 @@ namespace Moon
 
 			return output;
 		}
-		__forceinline unsigned char ReverseNibbles(const unsigned char& c)
+		static unsigned char ReverseNibbles(const unsigned char& c)
 		{
 			return c << 4 | c >> 4;
 		}
-		__forceinline const std::string& ToBooleanString(const bool& value)
+		static const std::string& ToBooleanString(const bool& value)
 		{
 			return value ? s_True : s_False;
 		}
-		__forceinline unsigned int SwapBytes(unsigned int value)
+		static unsigned int SwapBytes(unsigned int num)
 		{
-			_asm
-			{
-				mov eax, value
-				bswap eax
-				mov value, eax
-			}
+			((num>>24)&0xff) |
+            ((num<<8)&0xff0000) |
+            ((num>>8)&0xff00) |
+            ((num<<24)&0xff000000);
 
-			return value;
+			return num;
 		}
 	}
 }

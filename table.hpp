@@ -5,13 +5,6 @@
 #include "string.hpp"
 #include "bit_conv.hpp"
 
-//Not inlining in debug mode
-#ifdef _DEBUG
-#define _prefix 
-#else
-#define _prefix __forceinline
-#endif
-
 namespace Moon
 {
 	namespace Hacking
@@ -45,11 +38,11 @@ namespace Moon
 						}
 					}
 				}
-				_prefix void Input(std::string& str) const
+				inline void Input(std::string& str) const
 				{
 					Input((unsigned char*)str.data(), str.size());
 				}
-				_prefix void Input(unsigned char* str, size_t lenght) const
+				inline void Input(unsigned char* str, size_t lenght) const
 				{
 					if (!m_Change)
 						return;
@@ -59,7 +52,7 @@ namespace Moon
 						str[i] = m_Table[str[i]];
 					}
 				}
-				_prefix void Output(unsigned char* str, size_t lenght) const
+				inline void Output(unsigned char* str, size_t lenght) const
 				{
 					if (!m_Change)
 						return;
@@ -74,7 +67,7 @@ namespace Moon
 						}
 					}
 				}
-				_prefix void Output(std::string& str) const
+				inline void Output(std::string& str) const
 				{
 					Output((unsigned char*)str.data(), str.size());
 				}
@@ -93,11 +86,11 @@ namespace Moon
 						m_Table.push_back(i);
 					}
 				}
-				_prefix unsigned char Find(const char& c, const size_t& start = 0) const
+				inline unsigned char Find(const char& c, const size_t& start = 0) const
 				{
 					return m_Table.find(c, start);
 				}
-				_prefix void ReplaceAll(const char& c, const char& other)
+				inline void ReplaceAll(const char& c, const char& other)
 				{
 					if (c != other)
 					{

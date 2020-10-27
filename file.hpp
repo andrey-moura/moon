@@ -10,7 +10,7 @@ namespace Moon
 	namespace File
 	{
 		template <class T>
-		__forceinline std::vector<T> ReadAllBytes(const std::string& path)
+		static std::vector<T> ReadAllBytes(const std::string& path)
 		{
 			wxFile file;
 			std::vector<T> ret;
@@ -19,7 +19,7 @@ namespace Moon
 			{
 				if (file.Open(path))
 				{					
-					ret.resize(file.Length()*sizeof T);
+					ret.resize(file.Length()*sizeof(T));
 					file.Read(ret.data(), file.Length());
 				}
 			}
@@ -27,7 +27,7 @@ namespace Moon
 			return ret;
 		}
 
-		__forceinline std::string ReadAllText(const std::string& path)
+		static std::string ReadAllText(const std::string& path)
 		{
 			std::string ret;
 
@@ -44,12 +44,12 @@ namespace Moon
 			return ret;
 		}
 
-		__forceinline auto ReadAllLines(const std::string& path, const bool& emptyLines = false)
+		static auto ReadAllLines(const std::string& path, const bool& emptyLines = false)
 		{
 			return String::GetLines(ReadAllText(path), emptyLines);
 		}
 
-		__forceinline void WriteAllBytes(const std::string& path, const void* bytes, size_t size)
+		static void WriteAllBytes(const std::string& path, const void* bytes, size_t size)
 		{
 			wxFile file;
 
@@ -59,17 +59,17 @@ namespace Moon
 		}
 
 		template <class T>
-		__forceinline void WriteAllBytes(const std::string& path, const std::vector<T>& bytes)
+		static void WriteAllBytes(const std::string& path, const std::vector<T>& bytes)
 		{
-			WriteAllBytes(path, (void*)bytes.data(), bytes.size() * sizeof T);
+			WriteAllBytes(path, (void*)bytes.data(), bytes.size() * sizeof(T));
 		}
 
-		__forceinline void WriteAllText(const std::string& path, const std::string& text)
+		static void WriteAllText(const std::string& path, const std::string& text)
 		{
 			WriteAllBytes(path, text.data(), text.size());
 		}
 
-		__forceinline std::string AppenPath(const std::string& path, const std::string& other)
+		static std::string AppenPath(const std::string& path, const std::string& other)
 		{
 			std::string ret = path;
 			size_t oldSize = ret.size();
@@ -84,7 +84,7 @@ namespace Moon
 			return ret;
 		}
 
-		__forceinline bool MakeDir(const std::string& path)
+		static bool MakeDir(const std::string& path)
 		{			
 			wxFileName fn;
 			fn.SetPath(path);
@@ -97,29 +97,29 @@ namespace Moon
 			return fn.Mkdir(511, wxPATH_MKDIR_FULL);
 		}
 
-		__forceinline std::string SetName(const std::string& path, const std::string& name)
+		static std::string SetName(const std::string& path, const std::string& name)
 		{
 			wxFileName fn;			
 			fn.SetFullName(name);
 			fn.SetPath(path);
 			return fn.GetFullPath().ToStdString();
 		}
-		__forceinline bool Exists(const std::string& path)
+		static bool Exists(const std::string& path)
 		{
 			return wxFile().Exists(path);
 		}
 
-		__forceinline bool Exists(const wxString& path)
+		static bool Exists(const wxString& path)
 		{
 			return wxFile().Exists(path);
 		}
 
-		__forceinline bool Create(const std::string& path, const bool& replace = false)
+		static bool Create(const std::string& path, const bool& replace = false)
 		{			
 			return wxFile().Create(path, replace);
 		}
 
-		__forceinline bool Create(const wxString& path, const bool& replace = false)
+		static bool Create(const wxString& path, const bool& replace = false)
 		{
 			return wxFile().Create(path, replace);
 		}
