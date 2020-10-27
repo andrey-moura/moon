@@ -8,7 +8,7 @@ namespace Moon
 		static std::string s_False = "False";
 		static std::string s_True = "True";
 
-		static unsigned char FromHexNibble(const unsigned char& value)
+		static unsigned char FromHexNibble(const uint8_t& value)
 		{
 			if (value >= 0x30 && value <= 0x46)
 			{
@@ -24,29 +24,42 @@ namespace Moon
 
 			return 0x00;
 		}		
-		static std::string ToHexString(const unsigned int& value)
+						
+		static std::string ToHexString(const uint8_t* values, size_t count)
 		{
-			std::string text(8, '0');			
+			std::string text;
+			text.reserve(count*2);
+			values += count-1;
 
-			for (size_t i = 0; i < 8; ++i)
+			for(size_t i = 0; i < count; ++i)
 			{
-				text[i] = s_Nibbles[(value & (0xF0000000 >> (4*i))) >> (28-(4*i))];
+				text.push_back(s_Nibbles[(values[0] & 0xF0) >> 4]);
+				text.push_back(s_Nibbles[values[0] & 0x0F]);
+
+				--values;
 			}
 
 			return text;
 		}
-		static std::string ToHexChar(const unsigned char& c)
+		
+		template<typename T>
+		static std::string ToHexString(const T& value)
+		{
+			return ToHexString((uint8_t*)&value, sizeof(T));
+		}
+
+		static std::string ToHexChar(const uint8_t& c)
 		{
 			std::string hex(2, '0');
 			hex[0] = s_Nibbles[(c & 0xF0) >> 4];
 			hex[1] = s_Nibbles[c & 0x0F];
 			return hex;
 		}
-		static unsigned char FromHexChar(const unsigned char* str)
+		static unsigned char FromHexChar(const uint8_t* str)
 		{		
 			return FromHexNibble(str[0]) << 4 | FromHexNibble(str[1]);
 		}		
-		static unsigned char ReverseBits(const unsigned char& c)
+		static unsigned char ReverseBits(const uint8_t& c)
 		{
 			uint8_t output = c;
 
@@ -56,7 +69,7 @@ namespace Moon
 
 			return output;
 		}
-		static unsigned char ReverseNibbles(const unsigned char& c)
+		static unsigned char ReverseNibbles(const uint8_t& c)
 		{
 			return c << 4 | c >> 4;
 		}
@@ -64,7 +77,7 @@ namespace Moon
 		{
 			return value ? s_True : s_False;
 		}
-		static unsigned int SwapBytes(unsigned int num)
+		static unsigned int SwapBytes(uint32_t num)
 		{
 			((num>>24)&0xff) |
             ((num<<8)&0xff0000) |
