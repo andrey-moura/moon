@@ -27,6 +27,21 @@ namespace Moon
 			return ret;
 		}
 
+		template <class T1, class T2>
+		static void ReadAllText(const std::basic_string<T1>& path, std::basic_string<T2>& output)
+		{
+			if (wxFile::Exists(path))
+			{
+				wxFile file(path);
+
+				size_t size = output.size();
+
+				output.resize(size + (file.Length() / sizeof(T2)));
+
+				file.Read(output.data() + size, file.Length());
+			}
+		}
+
 		static std::string ReadAllText(const std::string& path)
 		{
 			std::string ret;
@@ -47,9 +62,10 @@ namespace Moon
 		static auto ReadAllLines(const std::string& path, const bool& emptyLines = false)
 		{
 			return String::GetLines(ReadAllText(path), emptyLines);
-		}
+		}		
 
-		static void WriteAllBytes(const std::string& path, const void* bytes, size_t size)
+		template <class T>
+		static void WriteAllBytes(const std::basic_string<T>& path, const void* bytes, size_t size)
 		{
 			wxFile file;
 
@@ -64,9 +80,15 @@ namespace Moon
 			WriteAllBytes(path, (void*)bytes.data(), bytes.size() * sizeof(T));
 		}
 
-		static void WriteAllText(const std::string& path, const std::string& text)
+		template <class T1, class T2>
+		static void WriteAllText(const std::basic_string<T1>& path, const std::basic_string<T2>& text)
 		{
-			WriteAllBytes(path, text.data(), text.size());
+			WriteAllBytes(path, text.data(), text.size() * sizeof(T2));
+		}
+
+		static void WriteAllLines(const std::string& path, const std::vector<std::string>& lines, const std::string& eol)
+		{			
+			WriteAllText(path, String::Join(lines, eol, false));
 		}
 
 		static std::string AppenPath(const std::string& path, const std::string& other)
@@ -122,6 +144,26 @@ namespace Moon
 		static bool Create(const wxString& path, const bool& replace = false)
 		{
 			return wxFile().Create(path, replace);
+		}
+
+		template<typename T1, typename T2>
+		static void AppendLine(const std::basic_string<T1>& path, const std::basic_string<T2>& line)
+		{
+			wxFile file;
+
+			if (!file.Exists(path))
+			{
+				file.Create(path, true);
+			}
+
+			file.Open(path, wxFile::OpenMode::read_write);
+
+			file.SeekEnd(0);
+
+			if (file.Length() > 0)
+				file.Write("\r\n");
+
+			file.Write((const void*)line.data(), line.size()* sizeof(T2));
 		}
 	}
 }

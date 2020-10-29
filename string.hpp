@@ -56,7 +56,11 @@ namespace Moon
 				c++;
 			}
 			//Store last line
-			lines.push_back(std::string_view(lastPos, c - lastPos));
+			size_t lenght = c - lastPos;
+			if (keepEmpty || lenght > 0)
+			{
+				lines.push_back(std::string_view(lastPos, c - lastPos));
+			}
 			return lines;
 		}
 
@@ -77,7 +81,8 @@ namespace Moon
 			return str_lines;
 		}
 
-		static std::string Join(const std::vector<std::string_view>& strings, const std::string& separator, bool ignoreEmpty)
+		template<typename T>
+		static std::string Join(const std::vector<T>& strings, const std::string& separator, bool ignoreEmpty)
 		{
 			size_t totalSize = 0;
 			size_t count = strings.size();
@@ -180,8 +185,9 @@ namespace Moon
 			}			
 		}
 		
-		static void ConvertLineEnds(std::string& str, const uint32_t& eol)
-		{		
+		template <typename T>
+		static void ConvertLineEnds(std::basic_string<T>& str, const uint32_t& eol)
+		{
 			for (size_t pos = 0; pos < str.size(); pos++) {
 				if (str[pos] == '\r')
 				{
@@ -227,6 +233,39 @@ namespace Moon
 						str[pos] = '\r';						
 					}
 				}
+			}
+		}
+
+		template <typename T>
+		static uint32_t EOLToInt(const std::basic_string<T>& eol)
+		{
+			if (eol.size() == 0)
+			{
+				return 0;
+			}
+			else if (eol.size() == 1)
+			{
+				return eol[0];
+			}
+			else
+			{
+				return 0x0d0a;
+			}
+		}
+
+		static const char* IntToEol(const uint32_t& eol)
+		{
+			switch(eol)
+			{
+				case 0x0a:
+					return "\n"; 
+				break;
+				case 0x0d:
+					return "\r";
+				break;
+				default:
+					return "\r\n";
+				break;
 			}
 		}
 
