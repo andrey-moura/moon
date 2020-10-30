@@ -86,5 +86,18 @@ namespace Moon
 
 			return num;
 		}
+		
+		static bool IsHexString(const std::string& str)
+		{
+			for(const char& c : str)
+			{
+				if(!isxdigit(c))
+				{
+					return false;
+				}				
+			}
+
+			return true;
+		}
 	}
 }
