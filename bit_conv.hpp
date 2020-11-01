@@ -91,7 +91,7 @@ namespace Moon
 		{
 			for(const char& c : str)
 			{
-				if(!isxdigit(c))
+				if(isxdigit(c) != 0)
 				{
 					return false;
 				}				
