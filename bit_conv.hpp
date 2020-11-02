@@ -91,13 +91,24 @@ namespace Moon
 		{
 			for(const char& c : str)
 			{
-				if(isxdigit(c) != 0)
+				if(isxdigit(c) == 0)
 				{
 					return false;
 				}				
 			}
 
 			return true;
+		}
+
+		static uint8_t ReplaceNibble(const uint8_t& b, const uint8_t& n, bool i)
+		{
+			if(i == 0)
+			{
+				return (b & 0xF0) | n;
+			} else 
+			{
+				return (b & 0x0F) | (n<<4);
+			}
 		}
 	}
 }

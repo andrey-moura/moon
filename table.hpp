@@ -52,6 +52,13 @@ namespace Moon
 						str[i] = m_Table[str[i]];
 					}
 				}
+				inline void Input(char& c) const
+				{
+					if (!m_Change)
+						return;
+
+					c = m_Table[(uint8_t)c];
+				}
 				inline void Output(unsigned char* str, size_t lenght) const
 				{
 					if (!m_Change)
