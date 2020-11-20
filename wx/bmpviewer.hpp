@@ -1,9 +1,10 @@
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/vscroll.h>
 #include <wx/dcbuffer.h>
 
-class wxBitmapView : public wxWindow
+class wxBitmapView : public wxHVScrolledWindow
 {
 public:	
 	wxBitmapView(wxWindow* parent,
@@ -12,7 +13,7 @@ public:
 		const wxSize& size = wxDefaultSize,
 		long style = 0,
 		const wxString& name = wxPanelNameStr)
-		: wxWindow(parent, id, pos, size, style, name)
+		: wxHVScrolledWindow(parent, id, pos, size, style, name)
 	{
 		SetDoubleBuffered(true);
 		SetBackgroundStyle(wxBackgroundStyle::wxBG_STYLE_PAINT);
@@ -27,12 +28,21 @@ public:
 		const wxSize& size = wxDefaultSize,
 		long style = 0,
 		const wxString& name = wxPanelNameStr)
-		: wxWindow(parent, id, pos, size, style, name), m_pBitmap(bitmap)
+		: wxHVScrolledWindow(parent, id, pos, size, style, name), m_pBitmap(bitmap)
 	{
 		SetDoubleBuffered(true);
 		SetBackgroundStyle(wxBackgroundStyle::wxBG_STYLE_PAINT);
 
 		Bind(wxEVT_PAINT, &wxBitmapView::OnPaintEvent, this);
+	}
+
+	virtual wxCoord OnGetRowHeight(size_t row) const
+	{
+		return m_Scale;
+	}
+	virtual wxCoord OnGetColumnWidth(size_t col) const
+	{
+		return m_Scale;
 	}
 private:
 	wxBitmap* m_pBitmap = nullptr;
@@ -40,16 +50,24 @@ private:
 public:
 	void SetScale(size_t scale)
 	{
+		ScrollToRowColumn(0, 0);
 		m_Scale = scale;
+		wxVarHScrollHelper::RefreshAll();
+		wxVarVScrollHelper::RefreshAll();	
 		Refresh();
 	}
 	void SetBitmap(wxBitmap* bitmap)
 	{
 		m_pBitmap = bitmap;
+
+		if(!m_pBitmap) return;
+		if(!m_pBitmap->IsOk()) return;
+
+		SetRowColumnCount(bitmap->GetHeight(), bitmap->GetWidth());
 		Refresh();
 	}
 private:
-	void Draw(wxDC& dc)
+	void OnDraw(wxDC& dc)
 	{
 		dc.Clear();
 
@@ -63,7 +81,8 @@ private:
 	void OnPaintEvent(wxPaintEvent& event)
 	{
 		wxBufferedPaintDC dc(this);
-		Draw(dc);
+		OnDraw(dc);
+		PrepareDC(dc);
 
 		event.Skip();
 	}
