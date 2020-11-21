@@ -91,61 +91,6 @@ namespace Moon
 			WriteAllText(path, String::Join(lines, eol, false));
 		}
 
-		static std::string AppenPath(const std::string& path, const std::string& other)
-		{
-			std::string ret = path;
-			size_t oldSize = ret.size();
-			ret.reserve(oldSize + other.size() + 2);
-
-			if (ret[oldSize - 1] != '\\')
-				ret.push_back('\\');
-
-			ret.append(other);
-			ret.push_back('\\');
-
-			return ret;
-		}
-
-		static bool MakeDir(const std::string& path)
-		{			
-			wxFileName fn;
-			fn.SetPath(path);
-
-			if (fn.DirExists())
-			{
-				return true;
-			}			
-
-			return fn.Mkdir(511, wxPATH_MKDIR_FULL);
-		}
-
-		static std::string SetName(const std::string& path, const std::string& name)
-		{
-			wxFileName fn;			
-			fn.SetFullName(name);
-			fn.SetPath(path);
-			return fn.GetFullPath().ToStdString();
-		}
-		static bool Exists(const std::string& path)
-		{
-			return wxFile().Exists(path);
-		}
-
-		static bool Exists(const wxString& path)
-		{
-			return wxFile().Exists(path);
-		}
-
-		static bool Create(const std::string& path, const bool& replace = false)
-		{			
-			return wxFile().Create(path, replace);
-		}
-
-		static bool Create(const wxString& path, const bool& replace = false)
-		{
-			return wxFile().Create(path, replace);
-		}
-
 		template<typename T1, typename T2>
 		static void AppendLine(const std::basic_string<T1>& path, const std::basic_string<T2>& line)
 		{
