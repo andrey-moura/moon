@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Moon
 {
 	namespace BitConverter
@@ -79,7 +81,7 @@ namespace Moon
 		}
 		static unsigned int SwapBytes(uint32_t num)
 		{
-			return	(num>>24)&0xff) |
+			return	((num>>24)&0xff) |
 					((num<<8)&0xff0000) |
 					((num>>8)&0xff00) |
 					((num<<24)&0xff000000);

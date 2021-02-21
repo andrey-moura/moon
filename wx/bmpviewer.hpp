@@ -56,6 +56,10 @@ public:
 		wxVarVScrollHelper::RefreshAll();	
 		Refresh();
 	}
+	size_t GetScale()
+	{
+		return m_Scale;
+	}
 	void SetBitmap(wxBitmap* bitmap)
 	{
 		m_pBitmap = bitmap;
@@ -66,7 +70,11 @@ public:
 		SetRowColumnCount(bitmap->GetHeight(), bitmap->GetWidth());
 		Refresh();
 	}
-private:
+	wxBitmap* GetBitmap()
+	{
+		return m_pBitmap;
+	}
+protected:
 	void OnDraw(wxDC& dc)
 	{
 		dc.Clear();
